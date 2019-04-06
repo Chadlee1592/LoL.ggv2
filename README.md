@@ -1,1 +1,1 @@
-# LoL.ggv2
+# Lol.ggv2
