@@ -10,25 +10,7 @@ import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
 
 class App extends Component {
-  state = {
-    loggedIn: false
-  };
-
-  componentDidMount() {
-    // this.setState({ loggedIn: true });
-  }
-
-  loginSuccess = () => {
-    this.setState({
-      loggedIn: true
-    });
-  };
-
-  logoutSuccess = () => {
-    this.setState({
-      loggedIn: false
-    });
-  };
+  state = {};
 
   render() {
     return (
