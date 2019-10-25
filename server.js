@@ -18,11 +18,15 @@ if (process.env.NODE_ENV === 'production') {
 app.use(routes);
 app.use(morgan('common'));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/lol', {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(
+  process.env.MONGODB_URI ||
+    'mongodb://user:password123@ds339458.mlab.com:39458/heroku_2zcnwsc0',
+  {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
