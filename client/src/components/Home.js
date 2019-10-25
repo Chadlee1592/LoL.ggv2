@@ -6,7 +6,7 @@ class Home extends Component {
     return (
       <>
         <div
-          class='welcome-title'
+          className='welcome-title'
           style={{ background: '#fff', padding: 24, minHeight: 80 }}
         >
           Welcome to LoL.gg

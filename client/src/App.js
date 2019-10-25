@@ -6,8 +6,6 @@ import Home from './components/Home';
 
 import { Layout, Menu } from 'antd';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import GoogleLogin from './components/Login';
 
 const { Header, Content, Footer } = Layout;
 
@@ -51,32 +49,11 @@ class App extends Component {
               <Menu.Item key='2'>
                 <NavLink to='/champions'>Champions </NavLink>
               </Menu.Item>
-              {this.state.loggedIn && (
-                <GoogleLogin
-                  loggedIn={this.state.loggedIn}
-                  loginSuccess={this.loginSuccess}
-                  logoutSuccess={this.logoutSuccess}
-                />
-              )}
             </Menu>
           </Header>
 
           <Content style={{ padding: '0 50px' }}>
-            <Route
-              exact
-              path='/'
-              render={
-                this.state.loggedIn
-                  ? props => <Home />
-                  : props => (
-                      <LoginPage
-                        loggedIn={this.state.loggedIn}
-                        loginSuccess={this.loginSuccess}
-                        logoutSuccess={this.logoutSuccess}
-                      />
-                    )
-              }
-            />
+            <Route exact path='/' component={Home} />
             <Route path='/champions' component={Champions} />
           </Content>
           <Footer
