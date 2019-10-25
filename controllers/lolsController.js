@@ -1,10 +1,11 @@
-require("dotenv").config()
-const db = require("../models");
-const fetch = require("node-fetch");
-const api = process.env.RIOT_API_KEY
-const champions = require("../champions.json");
+require('dotenv').config();
 
-Object.defineProperty(Array.prototype, "flat", {
+const db = require('../models');
+const fetch = require('node-fetch');
+const api = process.env.RIOT_API;
+const champions = require('../champions.json');
+
+Object.defineProperty(Array.prototype, 'flat', {
   value: function(depth = 1) {
     return this.reduce(function(flat, toFlatten) {
       return flat.concat(
@@ -30,11 +31,10 @@ const getChampName = key => {
 };
 
 const getOneMatch = (match, account) => {
-  // console.log("account", account);
   return fetch(
-    "https://na1.api.riotgames.com//lol/match/v4/matches/" +
+    'https://na1.api.riotgames.com//lol/match/v4/matches/' +
       match.gameId +
-      "?api_key=" +
+      '?api_key=' +
       api
   )
     .then(response => response.json())
@@ -49,6 +49,7 @@ const getOneMatch = (match, account) => {
 
       let id = json.gameId;
       let date = new Date(json.gameCreation);
+      // console.log('champion', match.champion);
       let champData = getChampName(match.champion);
 
       for (let j = 0; j < json.participantIdentities.length; j += 1) {
@@ -83,12 +84,8 @@ const getOneMatch = (match, account) => {
               assists: assists
             }
           });
-          // console.log("results", results);
         }
       }
-
-      // console.log("getOneMatch results", results);
-
       return results;
     });
 };
@@ -96,12 +93,11 @@ const getOneMatch = (match, account) => {
 const fixProfileURL = (link, json) => {
   return fetch(link)
     .then(response => {
-      // console.log(response.status);
       if (response.status < 400) {
         json.profileIconURL = link;
       } else {
         json.profileIconURL =
-          "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/1.png";
+          'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/1.png';
       }
       return json;
     })
@@ -111,101 +107,87 @@ const fixProfileURL = (link, json) => {
 };
 
 module.exports = {
-  findAll: function(req, res) {
+  findAll: async function(req, res) {
     const summonerName = req.params.id;
-    // console.log(req.params.id, "req");
-    fetch(
-      "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" +
+    // Grabbing basic profile information from the API based on the params
+    const accountCallRes = await fetch(
+      'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/' +
         summonerName +
-        "?api_key=" +
+        '?api_key=' +
         api
-    )
-      .then(response => response.json())
-      .then(json =>
-        fixProfileURL(
-          "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/" +
-            json.profileIconId +
-            ".png",
-          json
-        )
-      )
-      .then(json => {
-        const account = {
-          accountId: json.accountId,
-          summonerName: summonerName,
-          summonerLevel: json.summonerLevel,
-          profileIconId: json.profileIconId,
-          profileIconUrl: json.profileIconURL
-        };
-        res.locals.accountInfo = account;
+    );
+    const accountCallJson = await accountCallRes.json();
 
-        console.log("account",account);
+    if (!accountCallJson.id && accountCallJson.status.status_code === 404) {
+      const error = {
+        msg: 'Please try again'
+      };
+      res.status(400).json(error);
+    } else {
+      // Grabbing profile infomation from the fixProfileURL function
+      const profileInfo = await fixProfileURL(
+        'http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/' +
+          accountCallJson.profileIconId +
+          '.png',
+        accountCallJson
+      );
+      const profileInfoJson = await profileInfo;
+      // Grabbing the accounId and passing it to the matchlist route
+      const matchCallres = await fetch(
+        'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' +
+          accountCallJson.accountId +
+          '?api_key=' +
+          api
+      );
+      const matchCallJson = await matchCallres.json();
 
-        return fetch(
-          "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/" +
-            account.accountId +
-            "?api_key=" +
-            api
-        );
-      })
-      .then(response => response.json())
-      .then(json => {
-        console.log("json", json)
-        const matches = json.matches.slice(0, 10);
-        return Promise.all(
-          matches.map(match => getOneMatch(match, res.locals.accountInfo))
-        );
-      })
-      .then(matches => {
-        res.locals.results = matches;
-        let arrayMatches = matches.flat();
+      // Creating account object to consolidate account information
+      const account = {
+        accountId: accountCallJson.accountId,
+        summonerName: summonerName,
+        summonerLevel: accountCallJson.summonerLevel,
+        profileIconId: profileInfoJson.profileIconId,
+        profileIconUrl: profileInfoJson.profileIconURL
+      };
 
-        db.Lol.find({ summonerName: summonerName })
-          .then(function(response) {
-            if (response.length === 0) {
-              db.Lol.collection.insertMany(arrayMatches);
-              // console.log(matches);
-            } else {
-              for (let i = 0; i < response.length; i++) {
-                // console.log("looping over response");
-                let exists = false;
-                for (var j = 0; j < arrayMatches.length; j++) {
-                  // console.log('looping over results')
-                  // console.log("arrayMatches", arrayMatches.length)
-                  // console.log("checking", arrayMatches[j].gameId == response[i].gameId)
-                  if (arrayMatches[j].gameId == response[i].gameId) {
-                    exists = true;
-                    // console.log("exists", exists);
-                  }
-                }
+      // Only grabbing the latest 10 matches
+      const matches = matchCallJson.matches.slice(0, 10);
 
-                if (!exists) {
-                  db.Lol.collection.insertOne(results[j]);
-                } else {
-                  // console.log("already there");
-                }
-                // if(typeof results[i] !== "undefined" && res[i].gameId !== results[i].gameId) {
-                //   db.Lol.collection.insertOne(results[i]);
-                //   console.log("inserted: ", res[i].gameId)
-                // } else {
-                //   console.log(res[i].gameId, " is already inserted")
-                // }
-              }
+      // Using Promise.all to make 10 calls at once and waiting for all of them to return
+      const matchHistoryRes = await Promise.all(
+        matches.map(match => getOneMatch(match, account))
+      );
+      const matchHistoryJson = await matchHistoryRes;
+
+      // Using the flat method, combining all of the arrays into one array of objects
+      const arrayMatches = matchHistoryJson.flat();
+
+      const database = await db.Lol.find({ summonerName: summonerName });
+
+      if (database.length === 0) {
+        db.Lol.collection.insertMany(arrayMatches);
+      } else {
+        for (let i = 0; i < database.length; i++) {
+          let exists = false;
+          for (let j = 0; j < arrayMatches.length; j++) {
+            if (arrayMatches[j].gameId == database[i].gameId) {
+              exists = true;
             }
-          })
-          .then(() => {
-            db.Lol.find({ summonerName: summonerName })
-              .then(function(response) {
-                let clientData = response;
-                console.log("client data", clientData);
-                res.json(clientData);
-              })
-              .then(results => {
-                res.json(results);
-              });
-          })
+          }
 
-          .catch(err => res.status(422).json(err));
-      });
+          if (!exists) {
+            db.Lol.collection.insertOne(arrayMatches[j]);
+          }
+        }
+      }
+
+      const sendClient = await db.Lol.find({ summonerName: summonerName });
+
+      try {
+        res.send(sendClient);
+      } catch (e) {
+        res.status(422).json(e);
+      }
+    }
   }
 };

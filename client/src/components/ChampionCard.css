@@ -1,7 +1,7 @@
 .ant-carousel .slick-slide {
   text-align: center;
-  height: 299px;
-  line-height: 160px;
+  /* height: 299px;
+  line-height: 160px; */
   overflow: hidden;
 }
 .ant-layout-sider {

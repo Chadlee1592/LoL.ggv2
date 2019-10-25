@@ -2201,5 +2201,11 @@
       "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zyra_3.jpg",
       "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zyra_4.jpg"
     ]
+  },
+  {
+    "championName": "Yuumi",
+    "Key": 350,
+    "imageUrl": "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yuumi_0.jpg",
+    "roles": "Support"
   }
 ]
