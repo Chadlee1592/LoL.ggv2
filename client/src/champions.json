@@ -2061,5 +2061,14 @@
       "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zyra_3.jpg",
       "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zyra_4.jpg"
     ]
+  },
+  {
+    "championName": "Qiyana",
+    "imageUrl": "https://ddragon.leagueoflegends.com/cdn/9.21.1/img/champion/Qiyana.png",
+    "roles": "Middle, Jungle",
+    "skinsUrls": [
+      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Qiyana_0.jpg",
+      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Qiyana_1.jpg"
+    ]
   }
 ]
