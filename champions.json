@@ -1,7 +1,7 @@
 [
   {
     "championName": "Aatrox",
-    "Key": 226,
+    "Key": 266,
     "imageUrl": "https://ddragon.leagueoflegends.com/cdn/9.5.1/img/champion/Aatrox.png",
     "roles": "Top, Middle, Jungle",
     "skinsUrls": [
@@ -2206,6 +2206,10 @@
     "championName": "Yuumi",
     "Key": 350,
     "imageUrl": "https://ddragon.leagueoflegends.com/cdn/9.21.1/img/champion/Yuumi.png",
-    "roles": "Support"
+    "roles": "Support",
+    "skinsUrls": [
+      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yuumi_0.jpg",
+      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yuumi_1.jpg"
+    ]
   }
 ]

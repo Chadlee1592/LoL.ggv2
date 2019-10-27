@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const lolSchema = new Schema({
@@ -12,9 +12,10 @@ const lolSchema = new Schema({
   summonerLevel: { type: String },
   profileIconUrl: { data: Buffer, contentType: String },
   championURL: { data: Buffer, contentType: String },
-  stats: { type: Object }
+  stats: { type: Object },
+  exists: { type: Boolean }
 });
 
-const Lol = mongoose.model("Lol", lolSchema);
+const Lol = mongoose.model('Lol', lolSchema);
 
 module.exports = Lol;

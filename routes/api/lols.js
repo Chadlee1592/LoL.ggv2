@@ -5,4 +5,6 @@ router.route('/').get(lolsController.findAll);
 
 router.route('/:id').get(lolsController.findAll);
 
+router.route('/champion/:champion').get(lolsController.findChampion);
+
 module.exports = router;

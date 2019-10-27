@@ -4,5 +4,8 @@ export default {
   // Get summoner information
   getLols: function(summonerName) {
     return axios.get('/api/lols/' + summonerName);
+  },
+  getChamp: function(championName) {
+    return axios.get('/api/lols/champion/' + championName);
   }
 };

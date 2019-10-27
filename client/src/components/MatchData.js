@@ -38,8 +38,6 @@ const columns = [
 
 function MatchData(props) {
   console.log('props', props.data);
-  const keys = props.data.map(key => key._id);
-  console.log(keys);
   return (
     <Fragment>
       <div className='gutter-example'>

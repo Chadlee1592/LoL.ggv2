@@ -49,7 +49,6 @@ const getOneMatch = (match, account) => {
 
       let id = json.gameId;
       let date = new Date(json.gameCreation);
-      // console.log('champion', match.champion);
       let champData = getChampName(match.champion);
 
       for (let j = 0; j < json.participantIdentities.length; j += 1) {
@@ -82,7 +81,8 @@ const getOneMatch = (match, account) => {
               kills: kills,
               deaths: deaths,
               assists: assists
-            }
+            },
+            exists: true
           });
         }
       }
@@ -164,20 +164,19 @@ module.exports = {
 
       const database = await db.Lol.find({ summonerName: summonerName });
 
+      const dbData = database.map(matches => matches.gameId);
+
       if (database.length === 0) {
         db.Lol.collection.insertMany(arrayMatches);
       } else {
-        for (let i = 0; i < database.length; i++) {
-          let exists = false;
-          for (let j = 0; j < arrayMatches.length; j++) {
-            if (arrayMatches[j].gameId == database[i].gameId) {
-              exists = true;
-            }
+        const newData = [];
+        for (let i = 0; i < arrayMatches.length; i++) {
+          if (dbData.includes(arrayMatches[i].gameId.toString()) === false) {
+            newData.push(arrayMatches[i]);
           }
-
-          if (!exists) {
-            db.Lol.collection.insertOne(arrayMatches[j]);
-          }
+        }
+        if (newData.length !== 0) {
+          db.Lol.collection.insertMany(newData);
         }
       }
 
@@ -187,6 +186,17 @@ module.exports = {
         res.send(sendClient);
       } catch (e) {
         res.status(422).json(e);
+      }
+    }
+  },
+  findChampion: function(req, res) {
+    let championName = req.params.champion;
+    let championNameMatch =
+      championName.charAt(0).toUpperCase() + championName.slice(1);
+
+    for (let i = 0; i < champions.length; i++) {
+      if (championNameMatch === champions[i].championName) {
+        res.json(champions[i]);
       }
     }
   }
