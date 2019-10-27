@@ -37,7 +37,6 @@ const columns = [
 ];
 
 function MatchData(props) {
-  console.log('props', props.data);
   return (
     <Fragment>
       <div className='gutter-example'>

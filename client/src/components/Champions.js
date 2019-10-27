@@ -46,7 +46,6 @@ class Champions extends Component {
   handleReset = e => {
     e.preventDefault();
     this.setState({ searched: '', results: [] });
-    console.log(this.props.form);
   };
 
   render() {
