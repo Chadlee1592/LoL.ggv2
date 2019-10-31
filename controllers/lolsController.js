@@ -180,7 +180,9 @@ module.exports = {
         }
       }
 
-      const sendClient = await db.Lol.find({ summonerName: summonerName });
+      const sendClient = await db.Lol.find({ summonerName: summonerName })
+        .sort({ date: 'DESC' })
+        .limit(10);
 
       try {
         res.send(sendClient);
