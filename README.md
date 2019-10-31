@@ -27,7 +27,10 @@ Lol.ggv2 is a webs application to lookup the most recent match histories. Given 
 - Include additional data and statistics from the API such as summoners used and other players in the game, and display the new data when the toggle is clicked.
 - Develop and include authentication and a personal dashboard
 - Include a loading icon inbetween when data is loading
+- Develop a store using Redux for all of the React components have access to the state
+- Make the website mobile responsive
 
 ## Difficulties:
 
-- Working with League of Legends' API was a challenge because
+- Working with the League of Legends' API was a challenge because of the nested API calls that had to be made, and great deal of the data were crypted by id. 
+    - I learned about async await method to handle promises and avoid call back hell. In addition, async await method made error handling simpler by only checking if the first promise returned an error versus checking each of my API calls for errors.
