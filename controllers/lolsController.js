@@ -40,12 +40,13 @@ const getOneMatch = (match, account) => {
     .then(response => response.json())
     .then(json => {
       const results = [];
-
       let participantId = null;
       let participantTeam = null;
       let kills = null;
       let deaths = null;
       let assists = null;
+      let spell1Id = null;
+      let spell2Id = null;
 
       let id = json.gameId;
       let date = new Date(json.gameCreation);
@@ -64,6 +65,8 @@ const getOneMatch = (match, account) => {
           kills = json.participants[k].stats.kills;
           deaths = json.participants[k].stats.deaths;
           assists = json.participants[k].stats.assists;
+          spell1Id = json.participants[k].spell1Id;
+          spell2Id = json.participants[k].spell2Id;
         }
       }
       for (let l = 0; l < json.teams.length; l += 1) {
@@ -82,7 +85,10 @@ const getOneMatch = (match, account) => {
               deaths: deaths,
               assists: assists
             },
-            exists: true
+            exists: true,
+            spell1Id: spell1Id,
+            spell2Id: spell2Id,
+            gameMode: json.gameMode
           });
         }
       }
@@ -183,6 +189,8 @@ module.exports = {
       const sendClient = await db.Lol.find({ summonerName: summonerName })
         .sort({ date: 'DESC' })
         .limit(10);
+
+      console.log(sendClient);
 
       try {
         res.send(sendClient);

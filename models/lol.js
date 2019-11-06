@@ -13,7 +13,10 @@ const lolSchema = new Schema({
   profileIconUrl: { data: Buffer, contentType: String },
   championURL: { data: Buffer, contentType: String },
   stats: { type: Object },
-  exists: { type: Boolean }
+  exists: { type: Boolean },
+  spell1Id: { type: String },
+  spell2Id: { type: String },
+  gameMode: { type: String }
 });
 
 const Lol = mongoose.model('Lol', lolSchema);

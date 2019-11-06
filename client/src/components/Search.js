@@ -40,6 +40,7 @@ class Search extends Component {
         throw err;
       })
       .then(response => {
+        console.log(response);
         let summonerName;
         let summonerLevel;
         let profileIconUrl;
@@ -89,7 +90,6 @@ class Search extends Component {
             error: ''
           });
         }
-        // }
       });
   };
 
