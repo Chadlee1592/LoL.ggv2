@@ -4,6 +4,7 @@ const db = require('../models');
 const fetch = require('node-fetch');
 const api = process.env.RIOT_API;
 const champions = require('../champions.json');
+const matchType = require('../queueType.json');
 
 Object.defineProperty(Array.prototype, 'flat', {
   value: function(depth = 1) {
@@ -30,6 +31,14 @@ const getChampName = key => {
   return championData;
 };
 
+const getMatchType = queueId => {
+  for (let i = 0; i < matchType.length; i++) {
+    if (queueId === matchType[i].queueId) {
+      return matchType[i].type;
+    }
+  }
+};
+
 const getOneMatch = (match, account) => {
   return fetch(
     'https://na1.api.riotgames.com//lol/match/v4/matches/' +
@@ -51,6 +60,7 @@ const getOneMatch = (match, account) => {
       let id = json.gameId;
       let date = new Date(json.gameCreation);
       let champData = getChampName(match.champion);
+      let matchType = getMatchType(json.queueId);
 
       for (let j = 0; j < json.participantIdentities.length; j += 1) {
         if (
@@ -88,7 +98,8 @@ const getOneMatch = (match, account) => {
             exists: true,
             spell1Id: spell1Id,
             spell2Id: spell2Id,
-            gameMode: json.gameMode
+            gameMode: json.gameMode,
+            queueId: matchType
           });
         }
       }
@@ -189,8 +200,6 @@ module.exports = {
       const sendClient = await db.Lol.find({ summonerName: summonerName })
         .sort({ date: 'DESC' })
         .limit(10);
-
-      console.log(sendClient);
 
       try {
         res.send(sendClient);

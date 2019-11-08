@@ -21,7 +21,7 @@ const columns = [
   },
   {
     title: 'Game Mode',
-    dataIndex: 'gameMode'
+    dataIndex: 'queueId'
   },
   {
     title: 'Statistics',
