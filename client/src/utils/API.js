@@ -7,5 +7,10 @@ export default {
   },
   getChamp: function(championName) {
     return axios.get('/api/lols/champion/' + championName);
+  },
+  getSummonerSpell: function() {
+    return axios.get(
+      'http://ddragon.leagueoflegends.com/cdn/9.21.1/data/en_US/summoner.json'
+    );
   }
 };

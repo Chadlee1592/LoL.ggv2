@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { Card, Col, Row, Table, Typography, Avatar } from 'antd';
 import Chart from 'react-google-charts';
 import Moment from 'react-moment';
+import './MatchData.css';
 
 const { Title } = Typography;
 const columns = [
@@ -13,8 +14,14 @@ const columns = [
     title: '',
     dataIndex: 'championURL',
     render: championURL => (
-      <img src={championURL} className='champion-Url' alt='Champion' />
+      <div>
+        <img src={championURL} className='champion-Url' alt='Champion' />
+      </div>
     )
+  },
+  {
+    title: 'Game Mode',
+    dataIndex: 'queueId'
   },
   {
     title: 'Statistics',

@@ -4,6 +4,7 @@ const db = require('../models');
 const fetch = require('node-fetch');
 const api = process.env.RIOT_API;
 const champions = require('../champions.json');
+const matchType = require('../queueType.json');
 
 Object.defineProperty(Array.prototype, 'flat', {
   value: function(depth = 1) {
@@ -30,6 +31,14 @@ const getChampName = key => {
   return championData;
 };
 
+const getMatchType = queueId => {
+  for (let i = 0; i < matchType.length; i++) {
+    if (queueId === matchType[i].queueId) {
+      return matchType[i].type;
+    }
+  }
+};
+
 const getOneMatch = (match, account) => {
   return fetch(
     'https://na1.api.riotgames.com//lol/match/v4/matches/' +
@@ -40,16 +49,18 @@ const getOneMatch = (match, account) => {
     .then(response => response.json())
     .then(json => {
       const results = [];
-
       let participantId = null;
       let participantTeam = null;
       let kills = null;
       let deaths = null;
       let assists = null;
+      let spell1Id = null;
+      let spell2Id = null;
 
       let id = json.gameId;
       let date = new Date(json.gameCreation);
       let champData = getChampName(match.champion);
+      let matchType = getMatchType(json.queueId);
 
       for (let j = 0; j < json.participantIdentities.length; j += 1) {
         if (
@@ -64,6 +75,8 @@ const getOneMatch = (match, account) => {
           kills = json.participants[k].stats.kills;
           deaths = json.participants[k].stats.deaths;
           assists = json.participants[k].stats.assists;
+          spell1Id = json.participants[k].spell1Id;
+          spell2Id = json.participants[k].spell2Id;
         }
       }
       for (let l = 0; l < json.teams.length; l += 1) {
@@ -82,7 +95,11 @@ const getOneMatch = (match, account) => {
               deaths: deaths,
               assists: assists
             },
-            exists: true
+            exists: true,
+            spell1Id: spell1Id,
+            spell2Id: spell2Id,
+            gameMode: json.gameMode,
+            queueId: matchType
           });
         }
       }
