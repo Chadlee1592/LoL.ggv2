@@ -30,6 +30,7 @@ Lol.ggv2 is a webs application to lookup the most recent match histories. Given 
 
 ## Future Improvements:
 
+- Imporve error handling on both on the server and the client
 - Include additional data and statistics from the API such as summoners used and other players in the game, and display the new data when the toggle is clicked.
 - Develop and include authentication and a personal dashboard
 - Include a loading icon inbetween when data is loading
