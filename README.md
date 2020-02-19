@@ -4,6 +4,12 @@
 
 Lol.ggv2 is a webs application to lookup the most recent match histories. Given a summoner's username, the website will display summoner's level, profile icon, graph of win/loss ratio, champion's name, champion's icon, kill/death/assist statistics and date. The website also displays all of the champions League of Legends currently have, and will display avaialble skins in a carousel.
 
+## Screenshots
+
+<img src="images/lol.gg1.png" width="500">
+<img src="images/lol.gg2.png" width="500">
+<img src="images/lol.gg3.png" width="500">
+
 ## Technologies Used:
 
 ### Front End:
