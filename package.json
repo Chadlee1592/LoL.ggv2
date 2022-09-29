@@ -28,6 +28,6 @@
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
     "react-moment": "^0.8.4",
-    "recharts": "^1.8.3"
+    "recharts": "^2.1.14"
   }
 }
